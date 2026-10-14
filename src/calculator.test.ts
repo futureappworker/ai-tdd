@@ -154,4 +154,28 @@ describe("Calculator", () => {
 
     expect(calculator.getDisplay()).toBe("4");
   });
+
+  test("pressing equals after subtraction can show a negative result", () => {
+    const calculator = new Calculator();
+
+    calculator.press("2");
+    calculator.press("-");
+    calculator.press("5");
+    calculator.press("=");
+
+    expect(calculator.getDisplay()).toBe("-3");
+  });
+
+  test("pressing clear after error restores normal input", () => {
+    const calculator = new Calculator();
+
+    calculator.press("8");
+    calculator.press("/");
+    calculator.press("0");
+    calculator.press("=");
+    calculator.press("C");
+    calculator.press("3");
+
+    expect(calculator.getDisplay()).toBe("3");
+  });
 });
