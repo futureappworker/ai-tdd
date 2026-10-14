@@ -24,6 +24,11 @@ export class Calculator {
       return;
     }
 
+    if (key === ".") {
+      this.enterDecimalPoint();
+      return;
+    }
+
     if (key >= "0" && key <= "9") {
       this.enterDigit(key);
     }
@@ -54,6 +59,18 @@ export class Calculator {
     }
 
     this.display = this.display === "0" ? digit : this.display + digit;
+  }
+
+  private enterDecimalPoint(): void {
+    if (this.freshEntry) {
+      this.display = "0.";
+      this.freshEntry = false;
+      return;
+    }
+
+    if (!this.display.includes(".")) {
+      this.display += ".";
+    }
   }
 
   private applyPendingOperation(): void {
