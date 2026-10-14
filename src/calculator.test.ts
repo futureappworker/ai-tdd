@@ -114,4 +114,15 @@ describe("Calculator", () => {
 
     expect(calculator.getDisplay()).toBe("1.5");
   });
+
+  test("pressing equals after dividing by zero shows error on the display", () => {
+    const calculator = new Calculator();
+
+    calculator.press("8");
+    calculator.press("/");
+    calculator.press("0");
+    calculator.press("=");
+
+    expect(calculator.getDisplay()).toBe("Error");
+  });
 });
