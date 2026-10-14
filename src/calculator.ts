@@ -1,7 +1,13 @@
 export class Calculator {
+  private display = "0";
+
   getDisplay(): string {
-    return "0";
+    return this.display;
   }
 
-  press(_key: string): void {}
+  press(key: string): void {
+    if (key >= "0" && key <= "9") {
+      this.display = key;
+    }
+  }
 }
