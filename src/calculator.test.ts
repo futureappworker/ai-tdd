@@ -7,4 +7,12 @@ describe("Calculator", () => {
 
     expect(calculator.getDisplay()).toBe("0");
   });
+
+  test("pressing a digit shows that digit on the display", () => {
+    const calculator = new Calculator();
+
+    calculator.press("7");
+
+    expect(calculator.getDisplay()).toBe("7");
+  });
 });
