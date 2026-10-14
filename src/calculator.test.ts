@@ -90,4 +90,28 @@ describe("Calculator", () => {
 
     expect(calculator.getDisplay()).toBe("9");
   });
+
+  test("pressing an operator after equals continues from the result", () => {
+    const calculator = new Calculator();
+
+    calculator.press("2");
+    calculator.press("+");
+    calculator.press("3");
+    calculator.press("=");
+    calculator.press("+");
+    calculator.press("2");
+    calculator.press("=");
+
+    expect(calculator.getDisplay()).toBe("7");
+  });
+
+  test("pressing decimal then digits shows a decimal number on the display", () => {
+    const calculator = new Calculator();
+
+    calculator.press("1");
+    calculator.press(".");
+    calculator.press("5");
+
+    expect(calculator.getDisplay()).toBe("1.5");
+  });
 });
