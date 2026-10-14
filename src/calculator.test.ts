@@ -33,4 +33,15 @@ describe("Calculator", () => {
 
     expect(calculator.getDisplay()).toBe("0");
   });
+
+  test("pressing equals after addition shows the sum on the display", () => {
+    const calculator = new Calculator();
+
+    calculator.press("2");
+    calculator.press("+");
+    calculator.press("3");
+    calculator.press("=");
+
+    expect(calculator.getDisplay()).toBe("5");
+  });
 });
