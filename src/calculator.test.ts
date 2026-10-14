@@ -15,4 +15,13 @@ describe("Calculator", () => {
 
     expect(calculator.getDisplay()).toBe("7");
   });
+
+  test("pressing another digit appends to the display", () => {
+    const calculator = new Calculator();
+
+    calculator.press("7");
+    calculator.press("3");
+
+    expect(calculator.getDisplay()).toBe("73");
+  });
 });
