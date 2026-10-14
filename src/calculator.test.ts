@@ -77,4 +77,17 @@ describe("Calculator", () => {
 
     expect(calculator.getDisplay()).toBe("4");
   });
+
+  test("pressing another operator chains the pending calculation", () => {
+    const calculator = new Calculator();
+
+    calculator.press("2");
+    calculator.press("+");
+    calculator.press("3");
+    calculator.press("+");
+    calculator.press("4");
+    calculator.press("=");
+
+    expect(calculator.getDisplay()).toBe("9");
+  });
 });
