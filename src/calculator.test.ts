@@ -125,4 +125,33 @@ describe("Calculator", () => {
 
     expect(calculator.getDisplay()).toBe("Error");
   });
+
+  test("pressing clear during a pending operation starts a fresh calculation", () => {
+    const calculator = new Calculator();
+
+    calculator.press("2");
+    calculator.press("+");
+    calculator.press("C");
+    calculator.press("3");
+    calculator.press("+");
+    calculator.press("1");
+    calculator.press("=");
+
+    expect(calculator.getDisplay()).toBe("4");
+  });
+
+  test("pressing equals after adding decimal numbers shows the sum", () => {
+    const calculator = new Calculator();
+
+    calculator.press("1");
+    calculator.press(".");
+    calculator.press("5");
+    calculator.press("+");
+    calculator.press("2");
+    calculator.press(".");
+    calculator.press("5");
+    calculator.press("=");
+
+    expect(calculator.getDisplay()).toBe("4");
+  });
 });
