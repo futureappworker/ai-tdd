@@ -55,4 +55,15 @@ describe("Calculator", () => {
 
     expect(calculator.getDisplay()).toBe("5");
   });
+
+  test("pressing equals after multiplication shows the product on the display", () => {
+    const calculator = new Calculator();
+
+    calculator.press("6");
+    calculator.press("*");
+    calculator.press("7");
+    calculator.press("=");
+
+    expect(calculator.getDisplay()).toBe("42");
+  });
 });
