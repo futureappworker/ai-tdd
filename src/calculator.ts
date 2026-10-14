@@ -19,8 +19,8 @@ export class Calculator {
       return;
     }
 
-    if (key === "+") {
-      this.stageOperation("+");
+    if (key === "+" || key === "-") {
+      this.stageOperation(key);
       return;
     }
 
@@ -58,7 +58,10 @@ export class Calculator {
     }
 
     const current = Number(this.display);
-    const result = this.accumulator + current;
+    const result =
+      this.pendingOperator === "+"
+        ? this.accumulator + current
+        : this.accumulator - current;
     this.display = String(result);
     this.accumulator = null;
     this.pendingOperator = null;
