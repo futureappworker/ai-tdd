@@ -37,6 +37,10 @@ export class Calculator {
   }
 
   private stageOperation(operator: string): void {
+    if (this.pendingOperator !== null && !this.freshEntry) {
+      this.applyPendingOperation();
+    }
+
     this.accumulator = Number(this.display);
     this.pendingOperator = operator;
     this.freshEntry = true;
