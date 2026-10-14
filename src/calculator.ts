@@ -7,7 +7,7 @@ export class Calculator {
 
   press(key: string): void {
     if (key >= "0" && key <= "9") {
-      this.display = key;
+      this.display = this.display === "0" ? key : this.display + key;
     }
   }
 }
