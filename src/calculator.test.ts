@@ -44,4 +44,15 @@ describe("Calculator", () => {
 
     expect(calculator.getDisplay()).toBe("5");
   });
+
+  test("pressing equals after subtraction shows the difference on the display", () => {
+    const calculator = new Calculator();
+
+    calculator.press("9");
+    calculator.press("-");
+    calculator.press("4");
+    calculator.press("=");
+
+    expect(calculator.getDisplay()).toBe("5");
+  });
 });
