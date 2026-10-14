@@ -19,7 +19,7 @@ export class Calculator {
       return;
     }
 
-    if (key === "+" || key === "-" || key === "*") {
+    if (key === "+" || key === "-" || key === "*" || key === "/") {
       this.stageOperation(key);
       return;
     }
@@ -68,6 +68,9 @@ export class Calculator {
         break;
       case "*":
         result = this.accumulator * current;
+        break;
+      case "/":
+        result = this.accumulator / current;
         break;
       default:
         return;
