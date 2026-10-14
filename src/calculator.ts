@@ -19,7 +19,7 @@ export class Calculator {
       return;
     }
 
-    if (key === "+" || key === "-") {
+    if (key === "+" || key === "-" || key === "*") {
       this.stageOperation(key);
       return;
     }
@@ -58,10 +58,20 @@ export class Calculator {
     }
 
     const current = Number(this.display);
-    const result =
-      this.pendingOperator === "+"
-        ? this.accumulator + current
-        : this.accumulator - current;
+    let result: number;
+    switch (this.pendingOperator) {
+      case "+":
+        result = this.accumulator + current;
+        break;
+      case "-":
+        result = this.accumulator - current;
+        break;
+      case "*":
+        result = this.accumulator * current;
+        break;
+      default:
+        return;
+    }
     this.display = String(result);
     this.accumulator = null;
     this.pendingOperator = null;
