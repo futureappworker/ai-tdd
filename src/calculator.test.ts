@@ -66,4 +66,15 @@ describe("Calculator", () => {
 
     expect(calculator.getDisplay()).toBe("42");
   });
+
+  test("pressing equals after division shows the quotient on the display", () => {
+    const calculator = new Calculator();
+
+    calculator.press("8");
+    calculator.press("/");
+    calculator.press("2");
+    calculator.press("=");
+
+    expect(calculator.getDisplay()).toBe("4");
+  });
 });
