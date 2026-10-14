@@ -1,131 +1,189 @@
-const OPERATORS = new Set(["+", "-", "*", "/"]);
+export type CalculatorButton =
+  | "0"
+  | "1"
+  | "2"
+  | "3"
+  | "4"
+  | "5"
+  | "6"
+  | "7"
+  | "8"
+  | "9"
+  | "+"
+  | "-"
+  | "*"
+  | "/"
+  | "="
+  | "C"
+  | ".";
+
+type Operator = "+" | "-" | "*" | "/";
+
+const OPERATORS = new Set<Operator>(["+", "-", "*", "/"]);
+const DIGITS = new Set<CalculatorButton>([
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+]);
+
+function isDigit(button: CalculatorButton): button is Exclude<CalculatorButton, Operator | "=" | "C" | "."> {
+  return DIGITS.has(button);
+}
+
+function isOperator(button: CalculatorButton): button is Operator {
+  return OPERATORS.has(button as Operator);
+}
+
+function applyOperator(a: number, b: number, op: Operator): number | null {
+  switch (op) {
+    case "+":
+      return a + b;
+    case "-":
+      return a - b;
+    case "*":
+      return a * b;
+    case "/":
+      if (b === 0) {
+        return null;
+      }
+      return a / b;
+  }
+}
+
+function formatResult(value: number): string {
+  const rounded = Math.round(value * 1e10) / 1e10;
+  return String(rounded);
+}
 
 export class Calculator {
-  private display = "0";
+  private screen = "0";
   private accumulator: number | null = null;
-  private pendingOperator: string | null = null;
-  private freshEntry = false;
-  private inError = false;
+  private pendingOperator: Operator | null = null;
+  private waitingForOperand = false;
+  private error = false;
 
-  getDisplay(): string {
-    return this.display;
-  }
-
-  press(key: string): void {
-    if (this.inError && key !== "C") {
+  press(button: CalculatorButton): void {
+    if (this.error) {
+      if (button === "C") {
+        this.reset();
+      }
       return;
     }
 
-    if (key === "C") {
+    if (button === "C") {
       this.reset();
       return;
     }
 
-    if (key === "=") {
-      this.applyPendingOperation();
+    if (button === "=") {
+      this.evaluate();
       return;
     }
 
-    if (OPERATORS.has(key)) {
-      this.stageOperation(key);
+    if (isOperator(button)) {
+      this.pressOperator(button);
       return;
     }
 
-    if (key === ".") {
-      this.enterDecimalPoint();
+    if (button === ".") {
+      this.pressDecimal();
       return;
     }
 
-    if (key >= "0" && key <= "9") {
-      this.enterDigit(key);
+    if (isDigit(button)) {
+      this.pressDigit(button);
     }
+  }
+
+  display(): string {
+    return this.screen;
   }
 
   private reset(): void {
-    this.display = "0";
+    this.screen = "0";
     this.accumulator = null;
     this.pendingOperator = null;
-    this.freshEntry = false;
-    this.inError = false;
+    this.waitingForOperand = false;
+    this.error = false;
   }
 
-  private stageOperation(operator: string): void {
-    if (this.pendingOperator !== null && !this.freshEntry) {
-      this.applyPendingOperation();
-    }
-
-    this.accumulator = Number(this.display);
-    this.pendingOperator = operator;
-    this.freshEntry = true;
-  }
-
-  private enterDigit(digit: string): void {
-    if (this.freshEntry) {
-      this.display = digit;
-      this.freshEntry = false;
+  private pressDigit(digit: string): void {
+    if (this.waitingForOperand) {
+      this.screen = digit;
+      this.waitingForOperand = false;
       return;
     }
 
-    this.display = this.display === "0" ? digit : this.display + digit;
-  }
-
-  private enterDecimalPoint(): void {
-    if (this.freshEntry) {
-      this.display = "0.";
-      this.freshEntry = false;
+    if (this.screen === "0") {
+      this.screen = digit;
       return;
     }
 
-    if (!this.display.includes(".")) {
-      this.display += ".";
+    this.screen += digit;
+  }
+
+  private pressDecimal(): void {
+    if (this.waitingForOperand) {
+      this.screen = "0.";
+      this.waitingForOperand = false;
+      return;
+    }
+
+    if (!this.screen.includes(".")) {
+      this.screen += ".";
     }
   }
 
-  private applyPendingOperation(): void {
+  private pressOperator(op: Operator): void {
+    const current = Number.parseFloat(this.screen);
+
+    if (this.accumulator !== null && this.pendingOperator !== null && !this.waitingForOperand) {
+      const result = applyOperator(this.accumulator, current, this.pendingOperator);
+      if (result === null) {
+        this.showError();
+        return;
+      }
+      this.accumulator = result;
+      this.screen = formatResult(result);
+    } else {
+      this.accumulator = current;
+    }
+
+    this.pendingOperator = op;
+    this.waitingForOperand = true;
+  }
+
+  private evaluate(): void {
     if (this.pendingOperator === null || this.accumulator === null) {
       return;
     }
 
-    const current = Number(this.display);
-    const result = this.compute(this.accumulator, this.pendingOperator, current);
+    const current = Number.parseFloat(this.screen);
+    const result = applyOperator(this.accumulator, current, this.pendingOperator);
+
     if (result === null) {
       this.showError();
       return;
     }
 
-    this.display = String(result);
-    this.accumulator = null;
+    this.screen = formatResult(result);
+    this.accumulator = result;
     this.pendingOperator = null;
-    this.freshEntry = true;
-  }
-
-  private compute(
-    left: number,
-    operator: string,
-    right: number,
-  ): number | null {
-    switch (operator) {
-      case "+":
-        return left + right;
-      case "-":
-        return left - right;
-      case "*":
-        return left * right;
-      case "/":
-        if (right === 0) {
-          return null;
-        }
-        return left / right;
-      default:
-        return null;
-    }
+    this.waitingForOperand = true;
   }
 
   private showError(): void {
-    this.display = "Error";
+    this.screen = "Error";
+    this.error = true;
     this.accumulator = null;
     this.pendingOperator = null;
-    this.freshEntry = true;
-    this.inError = true;
+    this.waitingForOperand = false;
   }
 }

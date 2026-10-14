@@ -14,7 +14,7 @@ description: Test-driven development. Use when the user wants to build features 
 
 ## Phase 2: 撰寫失敗測試
 
-1. Read [測試品質規範](rules/測試品質規範.md)並取得公開行為、反模式與系統邊界的判斷要求。
+1. Read [測試品質規範](rules/測試品質規範.md)並取得公開行為、反模式、3A 註解分段與系統邊界的判斷要求。
 2. Think 依已載入規範決定本輪要覆蓋的一條已確認接縫、該測試要觀察的公開行為，以及該接縫是否跨越系統邊界。
 3. Read 本輪接縫跨越系統邊界時，讀取 [邊界模擬規範](rules/邊界模擬規範.md)並取得邊界依賴的模擬要求。
 4. Think 依已載入規範決定本輪測試要替換的外部依賴。
