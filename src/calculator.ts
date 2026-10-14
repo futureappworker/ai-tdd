@@ -1,3 +1,5 @@
+const OPERATORS = new Set(["+", "-", "*", "/"]);
+
 export class Calculator {
   private display = "0";
   private accumulator: number | null = null;
@@ -24,7 +26,7 @@ export class Calculator {
       return;
     }
 
-    if (key === "+" || key === "-" || key === "*" || key === "/") {
+    if (OPERATORS.has(key)) {
       this.stageOperation(key);
       return;
     }
@@ -85,31 +87,38 @@ export class Calculator {
     }
 
     const current = Number(this.display);
-    let result: number;
-    switch (this.pendingOperator) {
-      case "+":
-        result = this.accumulator + current;
-        break;
-      case "-":
-        result = this.accumulator - current;
-        break;
-      case "*":
-        result = this.accumulator * current;
-        break;
-      case "/":
-        if (current === 0) {
-          this.showError();
-          return;
-        }
-        result = this.accumulator / current;
-        break;
-      default:
-        return;
+    const result = this.compute(this.accumulator, this.pendingOperator, current);
+    if (result === null) {
+      this.showError();
+      return;
     }
+
     this.display = String(result);
     this.accumulator = null;
     this.pendingOperator = null;
     this.freshEntry = true;
+  }
+
+  private compute(
+    left: number,
+    operator: string,
+    right: number,
+  ): number | null {
+    switch (operator) {
+      case "+":
+        return left + right;
+      case "-":
+        return left - right;
+      case "*":
+        return left * right;
+      case "/":
+        if (right === 0) {
+          return null;
+        }
+        return left / right;
+      default:
+        return null;
+    }
   }
 
   private showError(): void {
