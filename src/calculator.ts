@@ -3,12 +3,17 @@ export class Calculator {
   private accumulator: number | null = null;
   private pendingOperator: string | null = null;
   private freshEntry = false;
+  private inError = false;
 
   getDisplay(): string {
     return this.display;
   }
 
   press(key: string): void {
+    if (this.inError && key !== "C") {
+      return;
+    }
+
     if (key === "C") {
       this.reset();
       return;
@@ -39,6 +44,7 @@ export class Calculator {
     this.accumulator = null;
     this.pendingOperator = null;
     this.freshEntry = false;
+    this.inError = false;
   }
 
   private stageOperation(operator: string): void {
@@ -91,6 +97,10 @@ export class Calculator {
         result = this.accumulator * current;
         break;
       case "/":
+        if (current === 0) {
+          this.showError();
+          return;
+        }
         result = this.accumulator / current;
         break;
       default:
@@ -100,5 +110,13 @@ export class Calculator {
     this.accumulator = null;
     this.pendingOperator = null;
     this.freshEntry = true;
+  }
+
+  private showError(): void {
+    this.display = "Error";
+    this.accumulator = null;
+    this.pendingOperator = null;
+    this.freshEntry = true;
+    this.inError = true;
   }
 }
