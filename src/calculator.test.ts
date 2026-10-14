@@ -24,4 +24,13 @@ describe("Calculator", () => {
 
     expect(calculator.getDisplay()).toBe("73");
   });
+
+  test("pressing clear resets the display to zero", () => {
+    const calculator = new Calculator();
+
+    calculator.press("9");
+    calculator.press("C");
+
+    expect(calculator.getDisplay()).toBe("0");
+  });
 });
